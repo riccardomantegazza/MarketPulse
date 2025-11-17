@@ -14,6 +14,6 @@ def drawdown_series(px: pd.DataFrame) -> pd.DataFrame:
     dd = px / cummax - 1.0
     return dd
 
-# Funzione per il Max Drawdown dei prezzi
+# Funzione per il Max Drawdown del prezzo
 def max_drawdown(px: pd.DataFrame) -> pd.Series:
     return drawdown_series(px).min()
