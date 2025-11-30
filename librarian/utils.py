@@ -57,3 +57,6 @@ def slice_period(
     mask = (px.index >= start_ts) & (px.index <= end_ts)
     return px.loc[mask]
 
+def to_float(x):
+    return x.timestamp()
+

@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 
 from librarian.core import (
@@ -10,7 +9,7 @@ from librarian.core import (
     rolling_average_pairwise_corr,
 )
 from librarian.models import MarketEvent
-from librarian.utils import download_price_history, slice_period
+from librarian.utils import download_price_history, slice_period, to_float
 
 #%%
 tickers = ['XLK', 'XLV', 'XLF', 'XLE', 'XLP', 'XLI', 'XLC', 'XLB', 'XLU', 'XLRE', 'XLY']
@@ -19,7 +18,7 @@ end_date = pd.Timestamp('2025-01-01')
 
 # Event Windows
 covid_event = MarketEvent('COVID', pd.Timestamp('2020-01-10'), pd.Timestamp('2023-05-05'))
-war_event = MarketEvent('Guerra Ucraina', pd.Timestamp('2022-02-24'), pd.Timestamp.today().normalize())
+war_event = MarketEvent('Ukrainian war', pd.Timestamp('2022-02-24'), pd.Timestamp.today().normalize())
 
 covid_start, covid_end = covid_event.start, covid_event.end
 war_start, war_end = war_event.start, war_event.end
@@ -51,11 +50,12 @@ returns.head()
 
 plt.figure(figsize=(12, 6))
 plt.plot(msi_full, label="Market Shift Index", linewidth=2, color='blue')
-plt.axvspan(covid_start, covid_end, alpha=0.2, color='red', label="COVID")
-plt.axvspan(war_start, war_end, alpha=0.2, color='orange', label="Guerra Ucraina")
-plt.title("Market Shift Index - Media Correlazioni tra Settori (rolling 63 giorni)")
-plt.xlabel("Data")
-plt.ylabel("Media Correlazioni")
+
+plt.axvspan(to_float(covid_start),  to_float(covid_end), alpha=0.2, color='red', label="COVID")
+plt.axvspan(to_float(war_start), to_float(war_end), alpha=0.2, color='orange', label="Ukrainian war")
+plt.title("Market Shift Index - Average Correlations between Sectors (rolling 63 days)")
+plt.xlabel("Date")
+plt.ylabel("Average Correlations")
 plt.legend()
 plt.grid(True, alpha=0.3)
 plt.tight_layout()
@@ -63,7 +63,7 @@ plt.show()
 
 plt.figure(figsize=(12, 7))
 dd_series.plot(alpha=0.7, linewidth=1.5)
-plt.title("Drawdown Storico per Settore", fontsize=14, fontweight='bold')
+plt.title("Historical Drawdown by Sector", fontsize=14, fontweight='bold')
 plt.xlabel("Data", fontsize=12)
 plt.ylabel("Drawdown (%)", fontsize=12)
 plt.legend(ncol=3, fontsize=9, loc='lower right', framealpha=0.9)
@@ -74,8 +74,8 @@ plt.show()
 
 plt.figure(figsize=(12, 6))
 dd_max.sort_values().plot(kind='bar', color='blue', alpha=0.7)
-plt.title("Max Drawdown per Settore (Periodo Totale)", fontsize=14, fontweight='bold')
-plt.xlabel("Settore", fontsize=12)
+plt.title("Max Drawdown by Sector (Total Period)", fontsize=14, fontweight='bold')
+plt.xlabel("Sector", fontsize=12)
 plt.ylabel("Max Drawdown (%)", fontsize=12)
 plt.xticks(rotation=45, ha='right')
 plt.grid(True, alpha=0.3, axis='y')

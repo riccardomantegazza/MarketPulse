@@ -11,7 +11,7 @@ class MarketEvent:
 
     name: str
     start: pd.Timestamp
-    end: pd.Timestamp | None = None
+    end: pd.Timestamp = None
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "start", pd.Timestamp(self.start))
